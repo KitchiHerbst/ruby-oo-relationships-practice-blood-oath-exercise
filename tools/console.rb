@@ -30,9 +30,9 @@ bl10 = BloodOath.new(brian,anon,"2018-01-21")
 bl11 = BloodOath.new(triston,anon,"2018-01-01")
 bl12 = BloodOath.new(cori,anon,"2018-23-01")
 
-bl14 = BloodOath.new(cori,austin,"2003-00-09")
 
-"2005-01-01"
+
+
 
 
 

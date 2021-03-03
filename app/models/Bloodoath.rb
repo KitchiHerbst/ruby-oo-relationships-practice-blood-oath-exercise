@@ -1,23 +1,28 @@
 
 class BloodOath
+    attr_reader :follower, :cult, :date
 
     @@all = []
-    attr_reader :follower, :cult, :initiation_date
 
-    def initialize(follower,cult,initiation_date)
+    def initialize(follower,cult,date="2005")
         @follower=follower
         @cult=cult
-        @initiation_date= initiation_date
+        @date=date
         @@all << self
     end
 
     def self.all
         @@all
     end
+    
+    def initiation_date
+        self.date
+    end
 
     def self.first_oath
-        all.find {|object|object.follower}
+        all.find {|object|object}.follower
     end
+    
 
 end
 

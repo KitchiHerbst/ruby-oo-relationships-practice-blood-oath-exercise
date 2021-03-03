@@ -1,9 +1,10 @@
 
 class Cult
+   
+    attr_reader :name, :slogan,:location, :founding_year
+    
     @@all = []
-    @@followers = []
-    attr_accessor :name, :location, :founding_year, :slogan
-
+    
     def initialize(name,location,founding_year,slogan)
         @name=name
         @location=location
@@ -16,86 +17,66 @@ class Cult
         @@all
     end
 
+    #all bloodoaths tied to the cult
+    def bloodoaths
+        BloodOath.all.select {|object|object.cult == self}
+    end
+
+    #all the followers in a specific cult
+    def cult_followers
+        bloodoaths.map {|bloodoaths|bloodoaths.follower}
+    end
+
+    #add a follower to the cult
     def recruit_follower(follower)
-        @@followers << follower
+        cult_followers << follower
     end
 
-    def cult_follower
-        BloodOath.all.select {|object|self==object.cult}
-    end
-
+    #returns an integer that is the number of followers a cult has
     def cult_population
-        cult_follower.size
-    end    
+        cult_followers.size
+    end
 
+    #takes a name as a string and returns 
+    #a cult whose instance mathes the argument
     def self.find_by_name(name)
-        BloodOath.all.select {|object| name == object.follower.name} 
+        all.find {|cult|cult.name==name}
     end
 
     def self.find_by_location(location)
-        array = BloodOath.all.select {|object| location == object.cult.location} 
-        array = array.map {|bloodoath|bloodoath.cult}
-        array.uniq
+        all.find {|cult|cult.location==location}
     end
 
     def self.find_by_founding_year(year)
-        array = BloodOath.all.select {|object| year == object.cult.founding_year} 
-        array = array.map {|bloodoath|bloodoath.cult}
-        array.uniq
+        all.find {|cult|cult.founding_year==year}
     end
 
+    #find the average age of a cult
     def average_age
-        # array = BloodOath.all.select {|object|self==object.cult}
-        # array.map {|object|object.age}
-        new_array = []
-        BloodOath.all.each do |object|
-            if object.cult == self
-                new_array << object.follower.age
-            end
-        end
-        var = new_array.sum.to_f / new_array.size.to_f
+        cult_followers.map {|follower|follower.age}.sum.to_f / cult_population.to_f
+    end
+
+    
+    #prints out the mottos of all the followers of this cult
+    def mottos
+        cult_followers.map {|follower|follower.motto}
     end
 
     def my_followers_mottos
-        array = BloodOath.all.select {|object|self==object.cult}
-        array.map {|object|object.follower.life_motto}
-        #binding.pry
-            # array=[]
-            # BloodOath.all.each do |object|
-            #   if self==object.cult
-            #     array << object.follower.life_motto
-            #   end
-            # end
-            # array
+        puts mottos
     end
 
+    #least popular cult, the one with the least number of followers
     def self.least_popular
-        pop = 100000000000000000000000
-        cult = nil
-        Cult.all.each do |object|
-            #binding.pry
-            if object.cult_population.length < pop 
-                pop = object.cult_population.length
-                cult = object
-                #binding.pry
-            end
-        end
-        cult
-       
-        # all.min_by {|object| object.}
-    end
-
-    def self.most_popular
-        all.max_by {|object| object.cult_follower.count}
+        #follower_count = hash.new(0)
+        all.min_by {|object|object.cult_followers.count}
+        
     end
 
     def self.most_common_location
-        all.find {|cult|cult == self.most_popular}.location
+        var= all.max_by {|object|object.location}
+        puts var.location
     end
-
-
-
-
 
 end
 
